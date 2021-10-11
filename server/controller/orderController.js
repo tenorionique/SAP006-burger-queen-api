@@ -1,16 +1,17 @@
-const getAllOrders = (req, res) => {
-    res.status(200).send({
-        message:'Usando o GET dentro da rota de orders',
-    });
-};
+const { Order, ProductOrder, User } = require('../db/models');
 
-const getOrderById = (req, res) => {
+const getAllOrders = async (req, res) => {
+    const orders = await Order.findAll();
+    res.status(200).send(orders);
+  };
+  
+
+const getOrderById =  async (req, res) => {
     const id = req.params.orderId;
-    res.status(200).send({
-        message:'Usando o GET para escolher pedido pelo Id',
-        id: id,
-    });
-};
+    const order = await Order.findByPk(id, { include: [User, ProductOrder] });
+    res.status(200).send(order);
+  };
+  
 
 const postOrders = (req, res) => {
     res.status(201).send({
