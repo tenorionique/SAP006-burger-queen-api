@@ -12,7 +12,7 @@ const getOrderById = async (req, res) => {
 };
 
 const postOrders = async (req, res) => {
-  const { client_name, table, status, user_id } = req.body;
+  const { client_name, table, status, user_id, products } = req.body;
 
   if (!client_name || !table) {
     return res.status(400).send({
@@ -24,8 +24,17 @@ const postOrders = async (req, res) => {
     table,
     status,
     user_id,
-    include: [ProductOrder],
   });
+
+  const productsnew = products.map(product => ({
+    product_id: product.id,
+    order_id: newOrder.id,
+    
+
+  }))
+
+ await ProductOrder.bulkCreate(productsnew)
+
   res.status(201).send(newOrder);
 };
 
