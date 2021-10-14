@@ -1,43 +1,108 @@
-const getAllUsers = (req, res) => {
-    res.status(200).send({
-        message:'Usando o GET dentro da rota de users',
-    });
+const {  User } = require("../db/models");
+const getAllUsers = async (req, res) => {
+  const users = await User.findAll({
+    attributes: {
+      exclude: "password",
+    },
+  });
+  return res.status(200).send(users);
 };
 
-const getUserById = (req, res) => {
-    const id = req.params.uid;
-    res.status(200).send({
-        message:'Usando o GET de um usuário pelo Id',
-        id: id,
-    });
+const getUserById = async (req, res) => {
+  const { uid } = req.params;
+  const user = await User.findByPk({
+    attributes: {
+      exclude: "password",
+    },
+    where: {
+      id: uid,
+    },
+  });
+  res.status(200).send(user);
 };
 
-const postUsers = (req, res) => {
-    res.status(201).send({
-        message: 'Usando o POST dentro da rota de users',
+const postUsers =  async (req, res) => {
+  const { name, password, email, role, restaurant } = req.body;
+  if (!name || !password || !role) {
+    return res.status(400).send({
+      message: "Missing required data",
     });
+  }
+
+  let ExistentUser = await User.findOne({
+    where: {
+      email,
+    },
+  });
+  if (ExistentUser) {
+    return res.status(403).send({
+      message: "Email already in use",
+    });
+  }
+
+  const createNewUser = await User.create({
+    name,
+    password,
+    email,
+    role,
+    restaurant,
+  });
+  return res.status(201).send(createNewUser);
 };
 
-const putUser = (req, res) => {
-    const id = req.params.uid;
-    res.status(201).send({
-        message:'Usando PUT dentro da rota de users',
-        id: id,
+const putUser = async (req, res) => {
+  const { name, email, role, restaurant } = req.body;
+  const { uid } = req.params;
+
+  if (!name || !email || !role) {
+    return res.status(400).send({
+      message: "Missing required data",
     });
+  }
+ 
+  const update = await User.update(
+    {
+      name,
+      email,
+      role,
+      restaurant,
+    },
+    {
+      where: {
+        id: uid,
+      },
+    }
+  );
+  return res.status(201).send(update);
 };
 
-const deleteUser = (req, res) => {
-    const id = req.params.uid;
-    res.status(201).send({
-        message: 'Usando DELETE dentro da rota de users',
-        id: id,
-    });
+const deleteUser = async (req, res) => {
+  const { email } = req.body;
+  const { uid } = req.params;
+
+  let checkEmail = await User.findOne({
+    where: {
+      email,
+    },
+  });
+  if (!checkEmail) {
+    return res.status(404).send({
+      message: "User not found",
+    }); 
+  }
+
+  const deleteUserById = await User.destroy({
+    where: {
+      id: uid,
+    },
+  });
+  return res.status(201).send(deleteUserById);
 };
 
 module.exports = {
-    getAllUsers,
-    getUserById,
-    postUsers,
-    putUser,
-    deleteUser
-}
+  getAllUsers,
+  getUserById,
+  postUsers,
+  putUser,
+  deleteUser,
+};
