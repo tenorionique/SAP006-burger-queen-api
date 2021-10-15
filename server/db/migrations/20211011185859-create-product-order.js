@@ -13,21 +13,14 @@ module.exports = {
         allowNull: false,
         references: { model: 'Order', key: 'id'}
       },
-      name: {
-        type: Sequelize.STRING,
-      },
-      flavor: {
-        type: Sequelize.STRING,
-      },
-      complement: {
-        type: Sequelize.STRING,
+      product_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: { model: "Product", key: "id" },
       },
       qtd: {
         type: Sequelize.INTEGER,
       },
-      price: {
-        type: Sequelize.DECIMAL,
-      }
     });
   },
   down: async (queryInterface, Sequelize) => {

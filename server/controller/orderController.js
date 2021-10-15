@@ -1,4 +1,5 @@
 const { Order, ProductOrder, User } = require("../db/models");
+const product = require("../db/models/product");
 
 const getAllOrders = async (req, res) => {
   const orders = await Order.findAll();
@@ -12,28 +13,18 @@ const getOrderById = async (req, res) => {
 };
 
 const postOrders = async (req, res) => {
-  const { client_name, table, status, user_id, products } = req.body;
+  const { client_name, table, products } = req.body;
 
-  if (!client_name || !table) {
-    return res.status(400).send({
-      message: "Missing required data",
-    });
-  }
-  const newOrder = await Order.create({
-    client_name,
-    table,
-    status,
-    user_id,
-  });
+  const orderId = Order.creat({ client_name, table, status: "pending" });
 
-  const productsnew = products.map(product => ({
+  const items = products.map((product) => ({
+    order_id: orderId,
     product_id: product.id,
-    order_id: newOrder.id,
-    
-
-  }))
-
- await ProductOrder.bulkCreate(productsnew)
+    qtd: product.qtd,
+  }));
+  
+  await ProductOrder.bulkCreate(items);
+  //criar um negocio que busca pedido
 
   res.status(201).send(newOrder);
 };
@@ -57,13 +48,13 @@ const putOrder = async (req, res) => {
 };
 
 const deleteOrder = async (req, res) => {
-  const { orderId} = req.params;
+  const { orderId } = req.params;
   const deleteOrderById = await Order.destroy({
-    where:{
-      id: orderId
-    }
-  })
- return res.status(201).send(deleteOrderById);
+    where: {
+      id: orderId,
+    },
+  });
+  return res.status(201).send(deleteOrderById);
 };
 
 module.exports = {
