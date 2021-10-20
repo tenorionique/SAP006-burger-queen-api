@@ -65,7 +65,7 @@ module.exports = {
         flavor: "frango",
         complement: null,
         image: "https://www.perdigao.com.br/assets/_images/4850f411315852efc87363480bd7a63fb96da849.png",
-        typy: "all-day",
+        type: "all-day",
         sub_type: "hamburguer",
         createdAt: "2021-02-16T13:11:54.173Z",
         updatedAt: "2021-02-16T13:11:54.173Z"
@@ -183,7 +183,7 @@ module.exports = {
       {
         name: "Hambúrguer duplo",
         price: 16,
-        flavo: "carne",
+        flavor: "carne",
         complement: "ovo",
         image: " https://www.perdigao.com.br/assets/_images/4850f411315852efc87363480bd7a63fb96da849.png",
         type: "all-day",

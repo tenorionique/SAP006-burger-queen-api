@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       flavor: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.STRING
       },
       complement:{
@@ -32,9 +32,17 @@ module.exports = {
         allowNull: true,
         type: Sequelize.STRING,
       },
-      subtype:{
+      sub_type:{
         allowNull: true,
         type: Sequelize.STRING,
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
       },
     });
   },
