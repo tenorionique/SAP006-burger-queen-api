@@ -13,18 +13,21 @@ const getOrderById = async (req, res) => {
 };
 
 const postOrders = async (req, res) => {
-  const { client_name, table, products } = req.body;
+ const { client_name, user_id, table, products } = req.body;
+ 
 
-  const orderId = Order.creat({ client_name, table, status: "pending" });
+  const order = await Order.create({ client_name, table, user_id, status: "pending" });
+  
 
   const items = products.map((product) => ({
-    order_id: orderId,
+    order_id: order.id,
     product_id: product.id,
     qtd: product.qtd,
   }));
   
-  await ProductOrder.bulkCreate(items);
-  //criar um negocio que busca pedido
+  await ProductOrder.bulkCreate(items); 
+  
+  const newOrder = await Order.findByPk(order.id, { include: [ProductOrder] })
 
   res.status(201).send(newOrder);
 };

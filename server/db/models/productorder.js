@@ -13,11 +13,10 @@ module.exports = (sequelize, DataTypes) => {
   };
   ProductOrder.init(
     {
-    name: DataTypes.STRING,
-    flavor: DataTypes.STRING,
-    complement: DataTypes.STRING,
+    order_id:DataTypes.INTEGER,
+    product_id:DataTypes.INTEGER,
     qtd: DataTypes.INTEGER,
-    price: DataTypes.DECIMAL,
+   
   }, 
   {
     sequelize,
