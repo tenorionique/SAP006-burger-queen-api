@@ -5,10 +5,7 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class ProductOrder extends Model {
     static associate(models) {
-     ProductOrder.belongsTo(models.Order, {
-        foreignKey: 'order_id',
-      });
-      ProductOrder.hasOne(models.Product, { foreignKey: 'id'});
+
     }
   };
   ProductOrder.init(
